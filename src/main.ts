@@ -1,19 +1,39 @@
 import * as core from '@actions/core'
-import {wait} from './wait'
+import * as github from '@actions/github'
+import {checkSecurityConsiderations} from './checks'
 
 async function run(): Promise<void> {
   try {
-    const ms: string = core.getInput('milliseconds')
-    core.debug(`Waiting ${ms} milliseconds ...`) // debug is only output if you set the secret `ACTIONS_STEP_DEBUG` to true
+    const {context} = github
+    const isDraft = (context.payload.pull_request?.draft ?? false) === true
+    const isClosed =
+      (context.payload.pull_request?.state ?? 'open').toLowerCase() === 'closed'
 
-    core.debug(new Date().toTimeString())
-    await wait(parseInt(ms, 10))
-    core.debug(new Date().toTimeString())
+    if (isDraft) {
+      skipCheck('PR is in "draft" status. Skipping check...')
+      return
+    }
 
-    core.setOutput('time', new Date().toTimeString())
+    if (isClosed) {
+      skipCheck('PR is "closed". Skipping check...')
+      return
+    }
+
+    const body = context.payload.pull_request?.body ?? ''
+    const prChecked = checkSecurityConsiderations(body)
+
+    if (!prChecked)
+      return core.setFailed(
+        'Security Considerations not properly documented in PR. Please update PR.'
+      )
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message)
   }
+}
+
+function skipCheck(message: string): void {
+  core.info(message)
+  core.setOutput('security-considerations-check', false)
 }
 
 run()
