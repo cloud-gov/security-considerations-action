@@ -2,5 +2,5 @@ name: 'Security Considerations Action'
 description: 'An action to check to make sure PR descriptions have "Security Considerations"'
 author: 'Cloud.gov'
 runs:
-  using: 'node12'
+  using: 'node20'
   main: 'dist/index.js'
