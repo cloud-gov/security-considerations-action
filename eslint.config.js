@@ -1,5 +1,6 @@
 export default [
   {
+    files: ["**/*.ts"],
     ignores: [
       "dist/",
       "lib/",
