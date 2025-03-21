@@ -1,17 +1,16 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {checkSecurityConsiderations} from './checks'
+import { checkSecurityConsiderations } from './checks'
 
 async function run(): Promise<void> {
   try {
-    const {context} = github
+    const { context } = github
     const isDraft = (context.payload.pull_request?.draft ?? false) === true
     const isClosed =
       (context.payload.pull_request?.state ?? 'open').toLowerCase() === 'closed'
     const isDependabot = context.actor === 'dependabot[bot]'
 
     if (isDependabot) {
-      skipCheck('PR is from Dependabot. Skipping check...')
       return
     }
 
