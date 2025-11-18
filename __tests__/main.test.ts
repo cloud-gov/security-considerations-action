@@ -1,7 +1,8 @@
-import {expect, test} from "@jest/globals";
-import {checkSecurityConsiderations} from "../src/checks";
+import { test } from 'node:test';
+import assert from 'node:assert';
+import { checkSecurityConsiderations } from "../src/checks";
 
-test("Successfully sets security considerations", async () => {
+test("Successfully sets security considerations", () => {
   const input = `
   # Hello World
 
@@ -10,10 +11,10 @@ test("Successfully sets security considerations", async () => {
   - World
   `;
   const checked = checkSecurityConsiderations(input);
-  await expect(checked).toBeTruthy();
+  assert.equal(checked, true);
 });
 
-test("Successfully sets security considerations with one # heading", async () => {
+test("Successfully sets security considerations with one # heading", () => {
   const input = `
   # Hello World
 
@@ -22,10 +23,10 @@ test("Successfully sets security considerations with one # heading", async () =>
   - World
   `;
   const checked = checkSecurityConsiderations(input);
-  await expect(checked).toBeTruthy();
+  assert.equal(checked, true);
 });
 
-test("Fails without security considerations heading", async () => {
+test("Fails without security considerations heading", () => {
   const input = `
   # Hello World
 
@@ -33,20 +34,20 @@ test("Fails without security considerations heading", async () => {
   None given
   `;
   const checked = checkSecurityConsiderations(input);
-  await expect(checked).toBeFalsy();
+  assert.equal(checked, false);
 });
 
-test("Fails without security considerations description", async () => {
+test("Fails without security considerations description", () => {
   const input = `
   # Hello World
 
   ## Security Considerations
   `;
   const checked = checkSecurityConsiderations(input);
-  await expect(checked).toBeFalsy();
+  assert.equal(checked, false);
 });
 
-test("Fails when template note for security considerations not changed", async () => {
+test("Fails when template note for security considerations not changed", () => {
   const input = `
   # Hello World
 
@@ -54,5 +55,5 @@ test("Fails when template note for security considerations not changed", async (
   [Note the any security considerations here, or make note of why there are none]
   `;
   const checked = checkSecurityConsiderations(input);
-  await expect(checked).toBeFalsy();
+  assert.equal(checked, false);
 });

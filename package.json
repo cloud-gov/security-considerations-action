@@ -4,12 +4,15 @@
   "private": true,
   "description": "TypeScript template action",
   "main": "lib/main.js",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "build": "tsc",
     "format": "tslint --fix '{src,__tests__}/*.ts'",
     "lint": "tslint '{src,__tests__}/*.ts'",
     "package": "ncc build --license licenses.txt",
-    "test": "jest",
+    "test": "npx tsx --test __tests__/*.test.ts",
     "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
   },
   "repository": {
@@ -30,10 +33,9 @@
   "devDependencies": {
     "@types/node": "^24.0.0",
     "@vercel/ncc": "^0.38.3",
-    "jest": "^30.0.0",
     "js-yaml": "^4.1.1",
-    "ts-jest": "^29.4.1",
     "tslint": "^6.1.3",
+    "tsx": "^4.20.6",
     "typescript": "^5.8.3"
   }
 }
